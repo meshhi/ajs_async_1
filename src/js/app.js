@@ -7,18 +7,19 @@ export default class GameSavingLoader {
     this.savedObjects = [];
   }
 
-  static load(gameSavingLoaderInstance) {
-    return new Promise((res, rej) => {
-      read()
-        .then((data) => parse(data))
-        .then((saving) => {
-          gameSavingLoaderInstance.savedObjects.push(JSON.parse(saving));
-          res();
-        })
-        .catch((err) => rej(err));
-    });
+  static async load(gameSavingLoaderInstance) {
+    try {
+      const data = await read();
+      const parsedData = await parse(data);
+      gameSavingLoaderInstance.savedObjects.push(JSON.parse(parsedData));
+    } catch (err) {
+      console.log(err);
+    }
   }
 }
 
-const gameSavingLoader = new GameSavingLoader();
-GameSavingLoader.load(gameSavingLoader);
+(async () => {
+  const gameSavingLoader = new GameSavingLoader();
+  await GameSavingLoader.load(gameSavingLoader);
+  console.log(gameSavingLoader);
+})();
